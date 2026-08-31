@@ -2,112 +2,34 @@
 <html>
 <head>
   <meta charset="utf-8">
-  <style>
-    body {
-      width: 280px;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      margin: 0;
-      padding: 14px;
-      background: #f8f9fa;
-      color: #2f3941;
-      user-select: none;
-    }
-    
-    .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #e9ecef;
-      padding-bottom: 10px;
-      margin-bottom: 12px;
-    }
-
-    .header h3 {
-      margin: 0;
-      font-size: 14px;
-      color: #1f73b7;
-    }
-
-    .count-badge {
-      font-size: 11px;
-      background: #e1f5fe;
-      color: #0288d1;
-      padding: 3px 8px;
-      border-radius: 12px;
-      font-weight: 600;
-    }
-
-    .control-stack {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .btn {
-      width: 100%;
-      background: #ffffff;
-      border: 1px solid #cbd5e1;
-      padding: 8px;
-      font-size: 12px;
-      border-radius: 5px;
-      cursor: pointer;
-      font-weight: 600;
-      color: #475569;
-      transition: all 0.15s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
-    }
-
-    .btn:hover {
-      background: #f1f5f9;
-    }
-
-    .btn.active {
-      background: #1f73b7;
-      color: #ffffff;
-      border-color: #1f73b7;
-    }
-
-    .btn-save {
-      background: #10b981;
-      color: #ffffff;
-      border-color: #059669;
-    }
-
-    .btn-save:hover {
-      background: #059669;
-    }
-
-    .btn-save:disabled {
-      background: #e2e8f0;
-      color: #94a3b8;
-      border-color: #cbd5e1;
-      cursor: not-allowed;
-    }
-
-    .btn-reset {
-      background: #ffffff;
-      color: #ef4444;
-      border-color: #fca5a5;
-    }
-
-    .btn-reset:hover {
-      background: #fef2f2;
-    }
-  </style>
+  <link rel="stylesheet" href="popup.css">
 </head>
 <body>
-  <div class="header">
-    <h3>Zendesk View Manager</h3>
-    <span id="hidden-count" class="count-badge">0 Hidden</span>
-  </div>
+  <div class="popup-container">
+    <div class="header">
+      <h3 class="title">Zendesk View Manager</h3>
+    </div>
+    
+    <hr class="divider">
 
-  <div class="control-stack">
-    <button id="toggle-edit" class="btn">✏️ Enable Edit Mode</button>
-    <button id="btn-save" class="btn btn-save" disabled>💾 Save Changes</button>
-    <button id="btn-reset" class="btn btn-reset">↺ Reset to Default</button>
+    <div class="control-stack">
+      <button id="toggle-edit" class="btn btn-primary">
+        Enable Edit Mode
+      </button>
+      
+      <button id="toggle-hidden-list" class="btn btn-secondary">
+        <span>Hidden Views</span>
+        <span id="hidden-count-tag" class="count-tag">0</span>
+      </button>
+
+      <div id="hidden-list-panel" class="hidden-list-panel">
+        <div id="hidden-items-container"></div>
+      </div>
+
+      <button id="btn-reset" class="btn btn-danger">
+        Reset to Default
+      </button>
+    </div>
   </div>
 
   <script src="popup.js"></script>
