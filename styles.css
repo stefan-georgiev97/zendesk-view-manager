@@ -1,0 +1,4 @@
+/* Placeholder for custom injected UI styles (eye icons, drag handles, hidden states) */
+.zvm-hidden {
+  display: none !important;
+}
