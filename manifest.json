@@ -4,11 +4,16 @@
   "version": "1.0.0",
   "description": "Reorder and hide views in Zendesk",
   "permissions": [
-    "storage"
+    "storage",
+    "activeTab"
   ],
   "host_permissions": [
     "https://*.zendesk.com/*"
   ],
+  "action": {
+    "default_popup": "popup.html",
+    "default_title": "Manage Zendesk Views"
+  },
   "content_scripts": [
     {
       "matches": ["https://*.zendesk.com/*"],

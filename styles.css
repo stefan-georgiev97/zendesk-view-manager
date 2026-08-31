@@ -1,4 +1,142 @@
-/* Placeholder for custom injected UI styles (eye icons, drag handles, hidden states) */
-.zvm-hidden {
+/* Normal State: Completely hide views marked as hidden */
+li.zvm-hidden {
   display: none !important;
+}
+
+/* Edit Mode State: Keep all items visible but grey out hidden ones */
+body.zvm-edit-mode li.zvm-hidden,
+li.zvm-draft-hidden {
+  display: flex !important;
+  opacity: 0.35 !important;
+  filter: grayscale(1) !important;
+}
+
+/* Ensure outer LI holds position relative */
+li.sc-cb7c8b8b-0 {
+  position: relative !important;
+}
+
+/* 1. OVERRIDE INLINE GRID LAYOUT TO SHRINK MY TICKETS TAB & EXPAND VIEWS PANE */
+[data-test-id="views_views-pane-div"] {
+  transition: grid-template-columns 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+body.zvm-edit-mode [data-test-id="views_views-pane-div"] {
+  grid-template-columns: 384px auto 0px !important; /* Expanded from 330px to 384px */
+}
+
+/* 2. ENSURE VIEWS PANE SCROLLABILITY IS KEPT INTACT */
+[data-test-id="views_views-pane_content"],
+nav[aria-label="Views"] {
+  overflow-y: auto !important;
+  max-height: 100% !important;
+}
+
+/* 3. SLIDING PADDING FOR INNER VIEW ROWS */
+li.sc-cb7c8b8b-0.zvm-draggable {
+  margin-left: 0 !important;
+  cursor: move !important;
+}
+
+li.sc-cb7c8b8b-0 .sc-1483ae13-0 {
+  transition: padding-left 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+/* Push text right to clear left handle space without shrinking text area */
+li.sc-cb7c8b8b-0.zvm-draggable .sc-1483ae13-0 {
+  padding-left: 26px !important;
+}
+
+/* 4. LEFT DRAG HANDLE */
+.zvm-page-drag-handle {
+  position: absolute !important;
+  left: 4px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  height: 20px !important;
+  cursor: grab !important;
+  color: #94a3b8 !important;
+  font-size: 14px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  user-select: none !important;
+  z-index: 100 !important;
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  opacity: 0;
+  animation: fadeInHandle 0.2s ease forwards;
+}
+
+@keyframes fadeInHandle {
+  to { opacity: 1; }
+}
+
+.zvm-page-drag-handle::after {
+  content: '' !important;
+  display: inline-block !important;
+  width: 1px !important;
+  height: 16px !important;
+  background: #64748b !important;
+  margin-left: 2px !important;
+  opacity: 0.8 !important;
+}
+
+.zvm-page-drag-handle:hover {
+  color: #1f73b7 !important;
+}
+
+.zvm-page-drag-handle:hover::after {
+  background: #1f73b7 !important;
+  opacity: 1 !important;
+}
+
+/* 5. RIGHT EYE TOGGLE BUTTON */
+.zvm-eye-toggle-btn {
+  background: transparent !important;
+  border: none !important;
+  cursor: pointer !important;
+  padding: 4px !important;
+  margin-left: auto !important;
+  margin-right: 4px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  color: #87929d !important;
+  z-index: 101 !important;
+  transition: color 0.15s ease, transform 0.15s ease !important;
+  opacity: 0.8 !important;
+  flex-shrink: 0 !important;
+}
+
+.zvm-eye-toggle-btn:hover {
+  color: #1f73b7 !important;
+  transform: scale(1.1) !important;
+  opacity: 1 !important;
+}
+
+.zvm-eye-toggle-btn svg {
+  width: 16px !important;
+  height: 16px !important;
+  fill: currentColor !important;
+  pointer-events: none !important;
+}
+
+/* Draggable item states */
+li.zvm-dragging {
+  opacity: 0.3 !important;
+}
+
+/* Drop Indicator Line */
+.zvm-drop-indicator {
+  height: 3px;
+  background: #1f73b7;
+  border-radius: 2px;
+  margin: 2px 0;
+  box-shadow: 0 0 8px rgba(31, 115, 183, 0.9);
+  pointer-events: none;
 }
