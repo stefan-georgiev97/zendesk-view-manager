@@ -17,7 +17,7 @@ Built with a native **NitroPack-inspired UI**, ZVM introduces drag-and-drop view
 
 ## 📦 Installation & Setup
 
-1. [Download Zendesk View Manager ZIP](https://github.com/stefan-georgiev97/zendesk-view-manager/archive/refs/heads/main.zip)
+1. [Download Zendesk View Manager ZIP](https://github.com/stefan-georgiev97/zendesk-view-manager/archive/refs/heads/main.zip) and unzip it where you want
 2. Open Google Chrome and navigate to chrome://extensions/.
 3. Enable Developer mode via the toggle switch in the top-right corner.
 4. Click Load unpacked and select your zendesk-view-manager directory.
