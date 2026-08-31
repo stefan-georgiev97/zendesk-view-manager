@@ -16,7 +16,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
-  // Toggle Edit Mode & Auto-Close Popup
   toggleEditBtn.addEventListener('click', () => {
     isEditMode = !isEditMode;
     chrome.tabs.sendMessage(tab.id, { action: 'toggleEditMode', enable: isEditMode }, () => {
@@ -27,18 +26,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     });
   });
 
-  // Toggle Hidden Views List
   toggleHiddenListBtn.addEventListener('click', () => {
     isListOpen = !isListOpen;
     hiddenListPanel.classList.toggle('open', isListOpen);
     if (isListOpen) renderHiddenViewsList();
   });
 
-  // Reset to Default
+  // Reset to Default: Clears storage & restores original layout cleanly
   btnReset.addEventListener('click', () => {
     chrome.tabs.sendMessage(tab.id, { action: 'resetAll' }, () => {
       if (chrome.runtime.lastError) return;
       syncState();
+      if (isListOpen) renderHiddenViewsList();
     });
   });
 

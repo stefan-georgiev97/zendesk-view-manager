@@ -11,12 +11,13 @@ li.zvm-draft-hidden {
   filter: grayscale(1) !important;
 }
 
-/* Ensure outer LI holds relative positioning */
-li.sc-cb7c8b8b-0 {
+/* Ensure view items hold relative positioning */
+li[type="node"],
+li[type="folder"] {
   position: relative !important;
 }
 
-/* 1. EXPAND VIEWS PANE IN EDIT MODE */
+/* 1. OVERRIDE INLINE GRID LAYOUT TO EXPAND VIEWS PANE */
 [data-test-id="views_views-pane-div"] {
   transition: grid-template-columns 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
@@ -33,21 +34,22 @@ nav[aria-label="Views"] {
 }
 
 /* 3. SHIFT TEXT RIGHT FOR DRAGGABLE ROWS TO AVOID OVERLAP */
-li.sc-cb7c8b8b-0.zvm-draggable {
+li.zvm-draggable {
   margin-left: 0 !important;
   cursor: move !important;
 }
 
-li.sc-cb7c8b8b-0 .sc-1483ae13-0 {
+/* Target the direct item header row wrapper */
+li.zvm-draggable > div {
   position: relative !important;
 }
 
-li.sc-cb7c8b8b-0.zvm-draggable > .sc-1483ae13-0 > a {
+li.zvm-draggable > div > a {
   padding-left: 32px !important;
   transition: padding-left 0.25s ease !important;
 }
 
-ul[data-test-id*="children"] > li.sc-cb7c8b8b-0.zvm-draggable > .sc-1483ae13-0 > a {
+ul[data-test-id*="children"] > li.zvm-draggable > div > a {
   padding-left: 32px !important;
 }
 
@@ -147,10 +149,10 @@ ul[data-test-id*="children"] > li.sc-cb7c8b8b-0.zvm-draggable > .sc-1483ae13-0 >
   display: flex !important;
   align-items: center !important;
   gap: 12px !important;
-  background: #120040 !important; /* NitroPack Deep Dark Purple */
+  background: #120040 !important;
   color: #ffffff !important;
   padding: 8px 16px !important;
-  border-radius: 50px !important; /* Pill shape */
+  border-radius: 50px !important;
   box-shadow: 0 12px 30px rgba(18, 0, 64, 0.35) !important;
   font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
   font-size: 13px !important;
@@ -165,7 +167,7 @@ ul[data-test-id*="children"] > li.sc-cb7c8b8b-0.zvm-draggable > .sc-1483ae13-0 >
 
 #zvm-page-toolbar .zvm-tb-badge {
   background: #2a0873 !important;
-  color: #00D28A !important; /* NitroPack Mint Green Score Color */
+  color: #00D28A !important;
   padding: 3px 10px !important;
   border-radius: 12px !important;
   font-size: 11px !important;
@@ -188,7 +190,6 @@ ul[data-test-id*="children"] > li.sc-cb7c8b8b-0.zvm-draggable > .sc-1483ae13-0 >
   background: #3e11a3 !important;
 }
 
-/* Save Button - Mint Green Accent */
 #zvm-page-toolbar button.zvm-tb-save {
   background: #00D28A !important;
   color: #120040 !important;
@@ -204,7 +205,6 @@ ul[data-test-id*="children"] > li.sc-cb7c8b8b-0.zvm-draggable > .sc-1483ae13-0 >
   cursor: not-allowed !important;
 }
 
-/* Cancel Button */
 #zvm-page-toolbar button.zvm-tb-cancel {
   background: #dc2626 !important;
   color: #ffffff !important;
@@ -212,4 +212,19 @@ ul[data-test-id*="children"] > li.sc-cb7c8b8b-0.zvm-draggable > .sc-1483ae13-0 >
 
 #zvm-page-toolbar button.zvm-tb-cancel:hover {
   background: #b91c1c !important;
+}
+
+/* Draggable item states */
+li.zvm-dragging {
+  opacity: 0.3 !important;
+}
+
+/* Drop Indicator Line */
+.zvm-drop-indicator {
+  height: 3px;
+  background: #1f73b7;
+  border-radius: 2px;
+  margin: 2px 0;
+  box-shadow: 0 0 8px rgba(31, 115, 183, 0.9);
+  pointer-events: none;
 }

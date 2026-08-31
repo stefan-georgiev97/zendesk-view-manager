@@ -12,25 +12,31 @@ let dropIndicator = null;
 let observer = null;
 
 const SVG_EYE_OPEN = `<svg viewBox="0 0 24 24"><path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/></svg>`;
-const SVG_EYE_SLASH = `<svg viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.17c0-1.66-1.34-3-3-3l-.17.02z"/></svg>`;
+const SVG_EYE_SLASH = `<svg viewBox="0 0 24 24"><path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.44-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.17c0-1.66-1.34-3-3-3l-.17.02z"/></svg>`;
 
-// Helper: Run DOM mutations with the observer temporarily disconnected
+function getViewItems() {
+  return document.querySelectorAll('nav[aria-label="Views"] li[type="node"], nav[aria-label="Views"] li[type="folder"]');
+}
+
+function getObserverTarget() {
+  return document.querySelector('nav[aria-label="Views"]') || 
+         document.querySelector('[data-test-id="views_views-pane_content"]') || 
+         document.body;
+}
+
 function execWithoutObserver(fn) {
   if (observer) observer.disconnect();
   try {
     fn();
   } finally {
-    // Flush any pending async mutations before reconnecting
     if (observer) {
       observer.takeRecords();
-      observer.observe(document.body, { childList: true, subtree: true });
+      observer.observe(getObserverTarget(), { childList: true, subtree: true });
     }
   }
 }
 
 function getViewName(liElement) {
-  if (!liElement.className.includes('sc-cb7c8b8b-0')) return null;
-
   const ariaLabelDiv = liElement.querySelector('[aria-describedby]');
   if (ariaLabelDiv && ariaLabelDiv.textContent.trim()) {
     return ariaLabelDiv.textContent.trim();
@@ -39,6 +45,11 @@ function getViewName(liElement) {
   const tooltipDiv = liElement.querySelector('[data-garden-container-id="containers.tooltip"]');
   if (tooltipDiv && tooltipDiv.textContent.trim()) {
     return tooltipDiv.textContent.trim();
+  }
+
+  const textHolder = liElement.querySelector('a div, button div');
+  if (textHolder && textHolder.textContent.trim()) {
+    return textHolder.textContent.trim();
   }
 
   return null;
@@ -54,11 +65,11 @@ function slugify(text) {
 
 function captureDefaultOrder() {
   if (defaultOriginalOrder.length > 0) return;
-  const items = document.querySelectorAll('li.sc-cb7c8b8b-0');
+  const items = getViewItems();
   items.forEach((li) => {
     const name = getViewName(li);
     if (!name) return;
-    const type = li.getAttribute('type') || (li.className.includes('expanded') ? 'folder' : 'node');
+    const type = li.getAttribute('type') || (li.classList.contains('expanded') ? 'folder' : 'node');
     const id = `${type}-${slugify(name)}`;
     defaultOriginalOrder.push(id);
   });
@@ -120,7 +131,7 @@ function updateFloatingToolbar(enable) {
 }
 
 function attachDragListeners(li, isSubNode) {
-  const rowWrapper = li.querySelector('.sc-1483ae13-0') || li;
+  const rowWrapper = li.firstElementChild || li;
   let dragHandle = rowWrapper.querySelector('.zvm-page-drag-handle');
   const innerLink = li.querySelector('a');
 
@@ -149,9 +160,8 @@ function attachDragListeners(li, isSubNode) {
   li.ondragend = (e) => {
     e.stopPropagation();
     li.classList.remove('zvm-dragging');
-    const indicator = getDropIndicator();
-    if (indicator.parentNode) {
-      indicator.parentNode.removeChild(indicator);
+    if (dropIndicator && dropIndicator.parentNode) {
+      dropIndicator.parentNode.removeChild(dropIndicator);
     }
     updatePendingOrderFromDOM();
     isDragging = false;
@@ -192,11 +202,11 @@ function updateEditModeUI(enable) {
 
   updateFloatingToolbar(enable);
 
-  const allItems = document.querySelectorAll('li.sc-cb7c8b8b-0');
+  const allItems = getViewItems();
 
   allItems.forEach((li) => {
     const viewId = li.dataset.zvmId;
-    const rowWrapper = li.querySelector('.sc-1483ae13-0') || li;
+    const rowWrapper = li.firstElementChild || li;
     let eyeBtn = rowWrapper.querySelector('.zvm-eye-toggle-btn');
     let dragHandle = rowWrapper.querySelector('.zvm-page-drag-handle');
     const innerLink = li.querySelector('a');
@@ -256,7 +266,7 @@ function updateEditModeUI(enable) {
 }
 
 function updatePendingOrderFromDOM() {
-  const allItems = document.querySelectorAll('li.sc-cb7c8b8b-0');
+  const allItems = getViewItems();
   const currentOrder = [];
 
   allItems.forEach((li) => {
@@ -297,7 +307,7 @@ function saveChanges() {
   });
 }
 
-// Minimal Reset: Only restores default DOM sequence and clears hidden classes
+// Reset from On-Page Toolbar: Keeps Edit Mode Active
 function resetDraftsKeepEditMode() {
   execWithoutObserver(() => {
     pendingViewOrder = [...defaultOriginalOrder];
@@ -313,20 +323,35 @@ function resetDraftsKeepEditMode() {
   });
 }
 
+// HARD RESET FROM POPUP: Clears storage & restores default layout WITHOUT entering Edit Mode
+function hardResetToDefault() {
+  execWithoutObserver(() => {
+    savedViewOrder = [];
+    pendingViewOrder = [];
+    savedHiddenViewIds = new Set();
+    pendingHiddenViewIds = new Set();
+
+    chrome.storage.local.remove(['viewOrder', 'hiddenViews'], () => {
+      updateEditModeUI(false);
+      applyCustomLayout(defaultOriginalOrder, savedHiddenViewIds);
+      notifyStateChange();
+    });
+  });
+}
+
 function applyCustomLayout(orderToUse = savedViewOrder, hiddenSetToUse = savedHiddenViewIds) {
   captureDefaultOrder();
   const itemsMap = new Map();
-  const allListItems = document.querySelectorAll('li.sc-cb7c8b8b-0');
+  const allListItems = getViewItems();
 
   allListItems.forEach((li) => {
     const name = getViewName(li);
     if (!name) return;
 
-    const type = li.getAttribute('type') || (li.className.includes('expanded') ? 'folder' : 'node');
+    const type = li.getAttribute('type') || (li.classList.contains('expanded') ? 'folder' : 'node');
     const id = `${type}-${slugify(name)}`;
     li.dataset.zvmId = id;
 
-    // Apply visibility class
     if (hiddenSetToUse.has(id)) {
       li.classList.add('zvm-hidden');
     } else {
@@ -336,7 +361,6 @@ function applyCustomLayout(orderToUse = savedViewOrder, hiddenSetToUse = savedHi
     itemsMap.set(id, li);
   });
 
-  // Re-append nodes in sequence if necessary
   if (orderToUse && orderToUse.length > 0 && itemsMap.size > 0) {
     orderToUse.forEach((id) => {
       const li = itemsMap.get(id);
@@ -347,7 +371,6 @@ function applyCustomLayout(orderToUse = savedViewOrder, hiddenSetToUse = savedHi
   }
 }
 
-// Storage Initialization
 chrome.storage.local.get(['hiddenViews', 'viewOrder'], (result) => {
   execWithoutObserver(() => {
     if (result.hiddenViews) {
@@ -363,22 +386,20 @@ chrome.storage.local.get(['hiddenViews', 'viewOrder'], (result) => {
 });
 
 chrome.storage.onChanged.addListener((changes) => {
-  if (!isEditMode) {
-    execWithoutObserver(() => {
-      if (changes.hiddenViews) {
-        savedHiddenViewIds = new Set(changes.hiddenViews.newValue || []);
-        pendingHiddenViewIds = new Set(savedHiddenViewIds);
-      }
-      if (changes.viewOrder) {
-        savedViewOrder = changes.viewOrder.newValue || [];
-        pendingViewOrder = [...savedViewOrder];
-      }
-      applyCustomLayout();
-    });
-  }
+  execWithoutObserver(() => {
+    if (changes.hiddenViews) {
+      savedHiddenViewIds = new Set(changes.hiddenViews.newValue || []);
+      if (!isEditMode) pendingHiddenViewIds = new Set(savedHiddenViewIds);
+    }
+    if (changes.viewOrder) {
+      savedViewOrder = changes.viewOrder.newValue || [];
+      if (!isEditMode) pendingViewOrder = [...savedViewOrder];
+    }
+    applyCustomLayout(isEditMode ? pendingViewOrder : savedViewOrder, isEditMode ? pendingHiddenViewIds : savedHiddenViewIds);
+    if (isEditMode) updateEditModeUI(true);
+  });
 });
 
-// Guarded MutationObserver: Disconnects instantly when triggered to prevent cascades
 observer = new MutationObserver(() => {
   if (isDragging) return;
 
@@ -388,9 +409,8 @@ observer = new MutationObserver(() => {
   });
 });
 
-observer.observe(document.body, { childList: true, subtree: true });
+observer.observe(getObserverTarget(), { childList: true, subtree: true });
 
-// Message Handlers
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
   if (request.action === 'getState') {
     const hasOrderChanges = JSON.stringify(pendingViewOrder) !== JSON.stringify(savedViewOrder);
@@ -401,7 +421,7 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       hiddenCount: isEditMode ? pendingHiddenViewIds.size : savedHiddenViewIds.size,
       hasUnsavedChanges: hasOrderChanges || hasHideChanges
     });
-    return true; // Keep channel open
+    return true;
   }
 
   if (request.action === 'toggleEditMode') {
@@ -414,18 +434,18 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
       applyCustomLayout(request.enable ? pendingViewOrder : savedViewOrder, request.enable ? pendingHiddenViewIds : savedHiddenViewIds);
     });
     sendResponse({ status: 'edit_toggled', isEditMode: isEditMode });
-    return true; // Keep channel open
+    return true;
   }
 
   if (request.action === 'saveChanges') {
     saveChanges();
     sendResponse({ status: 'success' });
-    return true; // Keep channel open
+    return true;
   }
 
   if (request.action === 'resetAll') {
-    resetDraftsKeepEditMode();
+    hardResetToDefault();
     sendResponse({ status: 'success' });
-    return true; // Keep channel open
+    return true;
   }
 });
