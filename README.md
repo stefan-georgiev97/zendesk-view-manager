@@ -4,7 +4,6 @@ A lightweight, high-performance Chrome Extension designed to customize, reorder,
 
 Built with a native **NitroPack-inspired UI**, ZVM introduces drag-and-drop view reordering and granular view visibility toggles without disrupting Zendesk's core styling.
 
----
 
 ## 🚀 Key Features
 
@@ -15,7 +14,6 @@ Built with a native **NitroPack-inspired UI**, ZVM introduces drag-and-drop view
 * **Observer Mutation Shield**: Built with a strict DOM MutationObserver lock pattern to eliminate infinite re-render loops and browser CPU spikes.
 * **NitroPack Design System**: Features NitroPack's signature deep dark purple (`#120040`), electric purple (`#6C38FF`), and mint green (`#00D28A`) color scheme with centered, pill-shaped controls.
 
----
 
 ## 📦 Installation & Setup
 
@@ -25,7 +23,6 @@ Built with a native **NitroPack-inspired UI**, ZVM introduces drag-and-drop view
 4. Click Load unpacked and select your zendesk-view-manager directory.
 5. Refresh your active Zendesk Agent Workspace tab.
 
----
 
 ## 🎯 How to Use
 
