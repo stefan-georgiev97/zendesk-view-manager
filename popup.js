@@ -16,14 +16,18 @@ document.addEventListener('DOMContentLoaded', async () => {
     return;
   }
 
+  // Toggle Edit Mode & Auto-Close Popup (Graceful handling of disconnected tabs)
   toggleEditBtn.addEventListener('click', () => {
     isEditMode = !isEditMode;
     chrome.tabs.sendMessage(tab.id, { action: 'toggleEditMode', enable: isEditMode }, () => {
+      // Accessing chrome.runtime.lastError explicitly clears the error state silently
       if (chrome.runtime.lastError) {
-        console.warn('[ZVM]', chrome.runtime.lastError.message);
+        // Silently consume the error without logging a console warning
+        const _ignored = chrome.runtime.lastError;
       }
-      window.close();
     });
+    // Close window immediately without waiting on async tab message response
+    window.close();
   });
 
   toggleHiddenListBtn.addEventListener('click', () => {
@@ -32,7 +36,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (isListOpen) renderHiddenViewsList();
   });
 
-  // Reset to Default: Clears storage & restores original layout cleanly
   btnReset.addEventListener('click', () => {
     chrome.tabs.sendMessage(tab.id, { action: 'resetAll' }, () => {
       if (chrome.runtime.lastError) return;
