@@ -1,4 +1,4 @@
-# Zendesk View Manager (ZVM) v1.1.0
+# Zendesk Support Manager v1.1.0
 
 A lightweight, high-performance Chrome Extension designed to customize, reorder, monitor, and declutter ticket queues directly inside Zendesk Agent Workspace.
 
@@ -22,7 +22,7 @@ Built with a native **NitroPack-inspired UI**, ZVM introduces real-time view aut
 
 ## 📦 Installation & Setup
 
-1. [Download Zendesk View Manager ZIP](https://github.com/stefan-georgiev97/zendesk-view-manager/archive/refs/heads/main.zip) and unzip it where you want.
+1. [Download Zendesk Support Manager ZIP](https://github.com/stefan-georgiev97/zendesk-view-manager/archive/refs/heads/main.zip) and unzip it where you want.
 2. Open Google Chrome and navigate to `chrome://extensions/`.
 3. Enable **Developer mode** via the toggle switch in the top-right corner.
 4. Click **Load unpacked** and select your `zendesk-view-manager` directory.
@@ -32,7 +32,7 @@ Built with a native **NitroPack-inspired UI**, ZVM introduces real-time view aut
 ## 🎯 How to Use
 
 ### View Manager & Reordering
-1. Click the Zendesk View Manager extension icon in your Chrome toolbar.
+1. Click the Zendesk Support Manager extension icon in your Chrome toolbar.
 2. Click **Enable Edit Mode**—the popup collapses and launches the floating toolbar directly on your Zendesk workspace.
 3. **Reorder Views**: Drag any view or folder by grabbing its far-left grip handle (`⋮⋮ |`).
 4. **Hide/Unhide Views**: Click the eye icon on any item row to switch its draft visibility with instant live-opacity feedback.
