@@ -6,30 +6,96 @@
 </head>
 <body>
   <div class="popup-container">
-    <div class="header">
-      <h3 class="title">Zendesk View Manager</h3>
-    </div>
     
-    <hr class="divider">
-
-    <div class="control-stack">
-      <button id="toggle-edit" class="btn btn-primary">
-        Enable Edit Mode
-      </button>
+    <!-- MAIN VIEW -->
+    <div id="view-main" class="view-panel active">
+      <div class="header">
+        <h3 class="title">Zendesk Support Manager</h3>
+      </div>
       
-      <button id="toggle-hidden-list" class="btn btn-secondary">
-        <span>Hidden Views</span>
-        <span id="hidden-count-tag" class="count-tag">0</span>
-      </button>
+      <hr class="divider">
 
-      <div id="hidden-list-panel" class="hidden-list-panel">
-        <div id="hidden-items-container"></div>
+      <!-- Section 1: Edit & Layout -->
+      <div class="control-stack">
+        <div class="section-subtitle">VIEW MANAGER</div>
+        <button id="toggle-edit" class="btn btn-primary">
+          Enable Edit Mode
+        </button>
+        
+        <button id="toggle-hidden-list" class="btn btn-secondary">
+          <span>Hidden Views</span>
+          <span id="hidden-count-tag" class="count-tag">0</span>
+        </button>
+
+        <div id="hidden-list-panel" class="hidden-list-panel">
+          <div id="hidden-items-container"></div>
+        </div>
+
+        <button id="btn-reset" class="btn btn-danger">
+          Reset to Default
+        </button>
       </div>
 
-      <button id="btn-reset" class="btn btn-danger">
-        Reset to Default
-      </button>
+      <hr class="divider">
+
+      <!-- Section 2: Automation & Alerts -->
+      <div class="settings-stack">
+        <div class="section-subtitle">AUTOMATION & ALERTS</div>
+
+        <!-- Auto-Refresh Group -->
+        <div class="setting-group">
+          <label class="toggle-row">
+            <span>⚡ Auto-Refresh Views</span>
+            <input type="checkbox" id="toggle-autorefresh">
+            <span class="switch"></span>
+          </label>
+
+          <div id="refresh-options-panel" class="sub-options-panel">
+            <span class="sub-label">Every</span>
+            <div class="inline-picker-pill">
+              <input type="number" id="refresh-interval-val" min="15" value="1" class="picker-num">
+              <select id="refresh-interval-unit" class="picker-unit">
+                <option value="seconds">seconds</option>
+                <option value="minutes" selected>minutes</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <label class="toggle-row">
+          <span>🔴 Flashing Tab Alert</span>
+          <input type="checkbox" id="toggle-badge">
+          <span class="switch"></span>
+        </label>
+
+        <!-- Sound Toggle Row with Sub View Trigger -->
+        <div class="toggle-row-wrapper">
+          <label class="toggle-row">
+            <span>🔔 Sound on Reopen</span>
+            <input type="checkbox" id="toggle-sound">
+            <span class="switch"></span>
+          </label>
+          <button id="btn-open-sound-panel" class="btn-icon-sub" title="Configure Tones" style="display: none;">
+            ⚙️ Tones
+          </button>
+        </div>
+      </div>
     </div>
+
+    <!-- SOUND SELECTION SUB-VIEW -->
+    <div id="view-sound" class="view-panel">
+      <div class="sub-header">
+        <button id="btn-back-to-main" class="btn-back">← Back</button>
+        <span class="sub-title">Select Tone</span>
+      </div>
+
+      <hr class="divider">
+
+      <div id="sound-radio-list" class="sound-radio-container">
+        <!-- Dynamically populated sound list -->
+      </div>
+    </div>
+
   </div>
 
   <script src="popup.js"></script>
