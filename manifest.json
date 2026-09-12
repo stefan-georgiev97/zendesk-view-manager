@@ -3,9 +3,9 @@
   "name": "Zendesk Support Manager",
   "version": "1.1.0",
   "icons": {
-    "16": "icon16.png",
-    "48": "icon48.png",
-    "128": "icon128.png"
+    "16": "img/icon16.png",
+    "48": "img/icon48.png",
+    "128": "img/icon128.png"
   },
   "description": "Reorder, hide, auto-refresh, and monitor Zendesk views.",
   "permissions": [
@@ -16,18 +16,18 @@
     "https://*.zendesk.com/*"
   ],
   "background": {
-    "service_worker": "background.js"
+    "service_worker": "js/background.js"
   },
   "action": {
     "default_popup": "popup.html",
-    "default_icon": "icon128.png",
+    "default_icon": "img/icon128.png",
     "default_title": "Zendesk Support Manager"
   },
   "content_scripts": [
     {
       "matches": ["https://*.zendesk.com/*"],
-      "js": ["content.js"],
-      "css": ["styles.css"],
+      "js": ["js/content.js"],
+      "css": ["css/styles.css"],
       "run_at": "document_idle"
     }
   ]
